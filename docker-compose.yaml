@@ -9,8 +9,10 @@ services:
     depends_on:
       - naming-server
     # Enable communication with Eureka Naming Server - override application.properties settings
+    # Enable Zipkin tracing - override application.properties settings
     environment:
       EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka/
+      SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
 
   currency-conversion:
     image: sumanthgma4/microservices-currency-conversion-service:0.0.1-SNAPSHOT
@@ -26,8 +28,10 @@ services:
       - naming-server
       - currency-exchange
     # Enable communication with Eureka Naming Server - override application.properties settings
+    # Enable Zipkin tracing - override application.properties settings
     environment:
       EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka/
+      SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
 
   naming-server:
     image: sumanthgma4/microservices-naming-server:0.0.1-SNAPSHOT
@@ -47,11 +51,22 @@ services:
     depends_on:
       - naming-server
     # Enable communication with Eureka Naming Server - override application.properties settings
+    # Enable Zipkin tracing - override application.properties settings
     environment:
       EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka/
+      SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
+
+  zipkin-server:
+    image: openzipkin/zipkin
+    # mem_limit: 700m
+    ports:
+      - "9411:9411"
+    networks:
+      - currency-network
 
 
 
+# Configure a common network for all services
 networks:
   currency-network:
     
