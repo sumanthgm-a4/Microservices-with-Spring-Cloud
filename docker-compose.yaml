@@ -1,0 +1,57 @@
+services:
+  currency-exchange:
+    image: sumanthgma4/microservices-currency-exchange-service:0.0.1-SNAPSHOT
+    # mem_limit: 700m
+    ports:
+      - "8000:8000"
+    networks:
+      - currency-network
+    depends_on:
+      - naming-server
+    # Enable communication with Eureka Naming Server - override application.properties settings
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka/
+
+  currency-conversion:
+    image: sumanthgma4/microservices-currency-conversion-service:0.0.1-SNAPSHOT
+    # mem_limit: 700m
+    ports:
+      - "8100:8100"
+    networks:
+      - currency-network
+    # Feign call to currency-exchange service works but rest template call fails - 
+    # use the Eureka registered name of the service currency-exchange-service instead of localhost:8000
+    # in the URL for rest template call in CurrencyConversionController
+    depends_on:
+      - naming-server
+      - currency-exchange
+    # Enable communication with Eureka Naming Server - override application.properties settings
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka/
+
+  naming-server:
+    image: sumanthgma4/microservices-naming-server:0.0.1-SNAPSHOT
+    # mem_limit: 700m
+    ports:
+      - "8761:8761"
+    networks:
+      - currency-network
+
+  api-gateway:
+    image: sumanthgma4/microservices-api-gateway:0.0.1-SNAPSHOT
+    # mem_limit: 700m
+    ports:
+      - "8765:8765"
+    networks:
+      - currency-network
+    depends_on:
+      - naming-server
+    # Enable communication with Eureka Naming Server - override application.properties settings
+    environment:
+      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka/
+
+
+
+networks:
+  currency-network:
+    

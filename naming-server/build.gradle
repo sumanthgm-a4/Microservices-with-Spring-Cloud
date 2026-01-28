@@ -35,6 +35,11 @@ dependencyManagement {
 	}
 }
 
+tasks.named('bootBuildImage') {
+    imageName = "sumanthgma4/microservices-${project.name}:${project.version}"
+	pullPolicy = org.springframework.boot.buildpack.platform.build.PullPolicy.IF_NOT_PRESENT
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }

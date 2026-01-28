@@ -1,0 +1,17 @@
+    // Micrometer Tracing bridge with Brave
+    implementation 'io.micrometer:micrometer-tracing-bridge-brave'
+    // Spring Boot Brave / Zipkin integration
+    implementation 'org.springframework.boot:spring-boot-micrometer-tracing-brave'
+    implementation 'org.springframework.boot:spring-boot-starter-zipkin'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    
+
+# ==============================
+# Micrometer Tracing Configuration
+# ==============================
+management.endpoints.web.exposure.include=health,info,metrics
+management.tracing.sampling.probability=1.0
+logging.pattern.level=%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]
+management.tracing.export.zipkin.endpoint=http://localhost:9411/api/v2/spans
+management.tracing.export.zipkin.enabled=true
+
