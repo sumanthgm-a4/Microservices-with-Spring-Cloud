@@ -14,6 +14,12 @@ java {
 	}
 }
 
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
 repositories {
 	mavenCentral()
 }
@@ -23,20 +29,18 @@ ext {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	// Micrometer Tracing bridge with Brave
-    implementation 'io.micrometer:micrometer-tracing-bridge-brave'
-    // Spring Boot Brave / Zipkin integration
-    implementation 'org.springframework.boot:spring-boot-micrometer-tracing-brave'
-    implementation 'org.springframework.boot:spring-boot-starter-zipkin'
-	implementation 'org.springframework.cloud:spring-cloud-starter-gateway-server-webflux'
-	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
-	testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
-	testImplementation 'io.projectreactor:reactor-test'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+	compileOnly 'org.projectlombok:lombok'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

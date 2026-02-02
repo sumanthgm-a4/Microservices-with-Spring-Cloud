@@ -16,6 +16,8 @@ public class ApiGatewayConfig {
                                     .addRequestParameter("Param", "MyValue"))
                     .uri("http://httpbin.org:80")
             )
+            .route(r -> r.path("/auth/**")
+                    .uri("lb://auth-server"))
             .route(r -> r.path("/currency-exchange/**")
                     .uri("lb://currency-exchange"))
             .route(r -> r.path("/currency-conversion/**")
