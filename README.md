@@ -1,4 +1,4 @@
-# Microservices Currency Project
+# Microservices Spring Cloud Project - Complete with JWT Auth
 
 This is a microservices-based project demonstrating a simple currency exchange and conversion system, JWT-based authentication, and API routing via a gateway. Everything is containerized using Docker for easy deployment.
 
@@ -61,7 +61,7 @@ The project consists of **6 containers**:
 
 Make sure you have **Docker** and **Docker Compose** installed.  
 
-Then, pull the required images (replace links with your Docker Hub images):
+Then, pull the required images:
 
 1. `docker pull sumanthgma4/microservices-currency-exchange-service:0.0.1-SNAPSHOT`
 2. `docker pull sumanthgma4/microservices-currency-conversion-service:0.0.1-SNAPSHOT`  
