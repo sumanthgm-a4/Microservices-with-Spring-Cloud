@@ -7,6 +7,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
@@ -28,7 +30,7 @@ public class JwtAuthFilter implements WebFilter {
         String path = exchange.getRequest().getURI().getPath();
 
         // 🔓 Allow auth endpoints
-        if (path.startsWith("/auth")) {
+        if (path.equals("/auth/login") || path.equals("/auth/register")) {
             return chain.filter(exchange);
         }
 
@@ -57,8 +59,11 @@ public class JwtAuthFilter implements WebFilter {
         // }
 
         String username = jwtUtil.extractUsername(token);
+        List<? extends GrantedAuthority> authorities = jwtUtil.extractRoles(token).stream()
+            .map(authority -> new SimpleGrantedAuthority(authority))
+            .toList();
 
-        Authentication auth = new UsernamePasswordAuthenticationToken(username, null, List.of());
+        Authentication auth = new UsernamePasswordAuthenticationToken(username, null, authorities);
 
         return chain.filter(exchange)
             .contextWrite(ReactiveSecurityContextHolder.withAuthentication(auth));

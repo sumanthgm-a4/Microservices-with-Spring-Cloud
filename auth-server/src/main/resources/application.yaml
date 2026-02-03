@@ -19,6 +19,11 @@ spring:
 server:
     port: 9090
 
+jwt:
+    secret: super-secret-key-super-secret-key-super-secret-key
+    expiration: 1800000 # 30 minutes in milliseconds
+
+
 eureka:
     client:
         serviceUrl:
