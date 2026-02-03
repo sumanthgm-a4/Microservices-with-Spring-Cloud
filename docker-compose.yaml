@@ -11,8 +11,8 @@ services:
     # Enable communication with Eureka Naming Server - override application.properties settings
     # Enable Zipkin tracing - override application.properties settings
     environment:
-      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka/
-      SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://naming-server:8761/eureka/
+      SPRING_ZIPKIN_BASEURL: http://zipkin-server:9411/
 
   currency-conversion:
     image: sumanthgma4/microservices-currency-conversion-service:0.0.1-SNAPSHOT
@@ -30,8 +30,8 @@ services:
     # Enable communication with Eureka Naming Server - override application.properties settings
     # Enable Zipkin tracing - override application.properties settings
     environment:
-      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka/
-      SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://naming-server:8761/eureka/
+      SPRING_ZIPKIN_BASEURL: http://zipkin-server:9411/
 
   naming-server:
     image: sumanthgma4/microservices-naming-server:0.0.1-SNAPSHOT
@@ -53,8 +53,45 @@ services:
     # Enable communication with Eureka Naming Server - override application.properties settings
     # Enable Zipkin tracing - override application.properties settings
     environment:
-      EUREKA.CLIENT.SERVICEURL.DEFAULTZONE: http://naming-server:8761/eureka/
-      SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://naming-server:8761/eureka/
+      SPRING_ZIPKIN_BASEURL: http://zipkin-server:9411/
+
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: spring_security_mysqldb
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppass
+    ports:
+      - "3306:3306"
+    networks:
+      - currency-network
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  auth-server:
+    image: sumanthgma4/microservices-auth-server:0.0.1-SNAPSHOT
+    # mem_limit: 700m
+    ports:
+      - "9090:9090"
+    networks:
+      - currency-network
+    depends_on:
+      - naming-server
+      - mysql
+    # Enable communication with Eureka Naming Server - override application.properties settings
+    # Enable Zipkin tracing - override application.properties settings
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://naming-server:8761/eureka/
+      # SPRING.ZIPKIN.BASEURL: http://zipkin-server:9411/
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/spring_security_mysqldb
+      SPRING_DATASOURCE_USERNAME: appuser
+      SPRING_DATASOURCE_PASSWORD: apppass
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect
+
 
   zipkin-server:
     image: openzipkin/zipkin
@@ -69,4 +106,7 @@ services:
 # Configure a common network for all services
 networks:
   currency-network:
-    
+
+# A volume to persist MySQL DB
+volumes:
+  mysql_data:
