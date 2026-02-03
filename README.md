@@ -20,11 +20,18 @@ This is a microservices-based project demonstrating a simple currency exchange a
 
 4. **naming-server (eureka)**  
    - Service discovery for all microservices.  
+   - Runs at **port 8761**.
+   - [http://localhost:8761](http://localhost:8761) 
 
 5. **auth-server**  
    - Provides JWT-based authentication.  
    - Simple username/password login.  
    - Uses **MySQL** container to store credentials.  
+   - Verify the individual resources at the /auth-resources/** which require role-based authorization:  
+   `/auth-resources/hello` - general access  
+   `/auth-resources/admin` - only for users tagged with **ADMIN** role  
+   `/auth-resources/manager` - only for users tagged with **MANAGER** role  
+   `/auth-resources/manager-admin` - for users with either **ADMIN** or **MANAGER** role
 
 ---
 
