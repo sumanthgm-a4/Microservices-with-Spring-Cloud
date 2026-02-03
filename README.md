@@ -89,7 +89,7 @@ flowchart LR
 
     Currency_Conversion -->|Feign Call| Currency_Exchange
     Auth_Server -->|SQL Read/Write| MySQL[MySQL DB]
-    Currency_Exchange -->|H2 Read/Write| H2[H2 Database]
+    Currency_Exchange -->|H2 Read| H2[In-Memory H2 DB]
 
     API_Gateway --> Eureka[Naming Server - Eureka]
     Currency_Exchange --> Eureka
